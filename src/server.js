@@ -1,8 +1,14 @@
 import express from "express";
+import cors from "cors";
+
 import { users } from "./mockData/fakeUsers.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+app.use(cors());
+
+app.use(express.json());
 
 app.get("/", (req, res) => {
   res.send(`<!doctype html>
@@ -39,6 +45,18 @@ app.get("/", (req, res) => {
 
 app.get("/api/v2/users", (req, res) => {
   res.json(users);
+});
+
+app.post("/api/v2/users", (req, res) => {
+  res.status(201).json({ message: "User created)" });
+});
+
+app.delete("/api/v2/users/:id", (req, res) => {
+  res.json({ message: "User deleted)" });
+});
+
+app.put("/api/v2/users/:id", (req, res) => {
+  res.json({ message: "User updated" });
 });
 
 app.listen(PORT, () => {
