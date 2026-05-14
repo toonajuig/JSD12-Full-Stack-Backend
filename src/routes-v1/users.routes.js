@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { users } from "../../fakeData/fakeUsers.js";
+import { users } from "../mockData/fakeUsers.js";
 
 export const router = Router();
 
@@ -7,7 +7,7 @@ router.get("/", (req, res) => {
   res.json(users);
 });
 
-router.post("/api/v2/users", (req, res) => {
+router.post("/", (req, res) => {
   const { username, email } = req.body || {};
   if (!username || !email) {
     return res.status(400).json({ error: "Username and email are required" });
@@ -24,7 +24,7 @@ router.post("/api/v2/users", (req, res) => {
   return res.status(201).json(newUser);
 });
 
-router.put("/api/v2/users/:id", (req, res) => {
+router.put("/:id", (req, res) => {
   const user = users.find((u) => u.id === req.params.id);
 
   if (!user) {
@@ -46,7 +46,7 @@ router.put("/api/v2/users/:id", (req, res) => {
   return res.status(200).json(user);
 });
 
-router.delete("/api/v2/users/:id", (req, res) => {
+router.delete("/:id", (req, res) => {
   const userIndex = users.findIndex((u) => u.id === String(req.params.id));
 
   if (userIndex === -1) {

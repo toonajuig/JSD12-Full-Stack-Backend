@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 
-import { users } from "./mockData/fakeUsers.js";
+import { router as apiRoutes } from "./routes-v1/index.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -43,7 +43,7 @@ app.get("/", (req, res) => {
   </html>`);
 });
 
-app.get("/api/v2/users", apiRoutes);
+app.use("/api/v2", apiRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
