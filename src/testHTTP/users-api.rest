@@ -1,1 +1,26 @@
 GET http://localhost:3000/api/v2/users
+
+
+### Create a new user
+POST http://localhost:3000/api/v2/users
+Content-Type: application/json
+
+{
+  "username": "Gorge",
+  "email": "gorge@example.com",
+  "password": "password123"
+}
+
+
+### Update a new user
+PUT http://localhost:3000/api/v2/users/1
+Content-Type: application/json
+
+{
+    "username": "Alice",
+    "email": "alice.johnson@example.com",
+    "password": "password123"
+}
+
+### Delete a user
+DELETE http://localhost:3000/api/v2/users/1

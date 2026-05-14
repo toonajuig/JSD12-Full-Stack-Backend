@@ -43,21 +43,7 @@ app.get("/", (req, res) => {
   </html>`);
 });
 
-app.get("/api/v2/users", (req, res) => {
-  res.json(users);
-});
-
-app.post("/api/v2/users", (req, res) => {
-  res.status(201).json({ message: "User created)" });
-});
-
-app.delete("/api/v2/users/:id", (req, res) => {
-  res.json({ message: "User deleted)" });
-});
-
-app.put("/api/v2/users/:id", (req, res) => {
-  res.json({ message: "User updated" });
-});
+app.get("/api/v2/users", apiRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
