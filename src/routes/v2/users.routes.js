@@ -1,29 +1,43 @@
 import { Router } from "express";
+import { User } from "../../modules/users/user.model.js";
 
 export const router = Router();
 
-router.get("/", (req, res) => {
-  res.json(users);
-});
+const userResponse = (doc) => {
+  const user = doc.toObject();
+  delete user.password;
+  return user;
+};
 
-router.post("/", (req, res) => {
-  const { username, email } = req.body || {};
-  if (!username || !email) {
-    return res.status(400).json({ error: "Username and email are required" });
+router.get("/", async (req, res) => {
+  try {
+    const users = await User.find();
+    return res.status(200).json({ success: true, data: users });
+  } catch (error) {
+    res.status(400).json({ success: false, error: error.message });
+  }
+});
+router.post("/", async (req, res) => {
+  const { username, email, password, role } = req.body || {};
+
+  if (!username || !email || !password) {
+    const error = new Error("username, email, and password are required");
+
+    error.name = "ValidationError";
+    error.status = 400;
+    return res.status(400).json({ success: false, error: error.message });
   }
 
-  const nextId = String(
-    (users.reduce((max, u) => Math.max(max, Number(u.id)), 0) || 0) + 1,
-  );
+  try {
+    const doc = await User.create({ username, email, password, role });
 
-  const newUser = { id: nextId, username, email };
-
-  users.push(newUser);
-
-  return res.status(201).json(newUser);
+    return res.status(201).json({ success: true, data: userResponse(doc) });
+  } catch (error) {
+    res.status(400).json({ success: false, error: error.message });
+  }
 });
 
-router.put("/:id", (req, res) => {
+router.put("/:id", async (req, res) => {
   const user = users.find((u) => u.id === req.params.id);
 
   if (!user) {
@@ -45,7 +59,7 @@ router.put("/:id", (req, res) => {
   return res.status(200).json(user);
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", async (req, res) => {
   const userIndex = users.findIndex((u) => u.id === String(req.params.id));
 
   if (userIndex === -1) {
