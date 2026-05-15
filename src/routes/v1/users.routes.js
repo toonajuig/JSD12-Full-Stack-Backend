@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { users } from "../../../mockData/fakeUsers.js";
+import { users } from "../../mockData/fakeUsers.js";
 
 export const router = Router();
 
