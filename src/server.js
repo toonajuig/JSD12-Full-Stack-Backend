@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 
 import { users } from "./mockData/fakeUsers.js";
-import { router as apiRoutes } from "./routes/v1/index.js";
+import { router as apiRoutes } from "./routes/index.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
