@@ -4,6 +4,8 @@ import cors from "cors";
 import { users } from "./mockData/fakeUsers.js";
 import { router as apiRoutes } from "./routes/index.js";
 import { connectDB } from "./config/mongodb.js";
+import { connect } from "mongoose";
+import { connectSupabase } from "./config/supabase.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -48,6 +50,7 @@ app.get("/", (req, res) => {
 app.use("/api", apiRoutes);
 
 await connectDB();
+await connectSupabase();
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

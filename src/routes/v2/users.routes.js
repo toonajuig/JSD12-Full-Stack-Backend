@@ -37,7 +37,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/", async (req, res) => {
   const user = users.find((u) => u.id === req.params.id);
 
   if (!user) {
@@ -59,7 +59,7 @@ router.put("/:id", async (req, res) => {
   return res.status(200).json(user);
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/", async (req, res) => {
   const userIndex = users.findIndex((u) => u.id === String(req.params.id));
 
   if (userIndex === -1) {
@@ -69,4 +69,46 @@ router.delete("/:id", async (req, res) => {
   const deletedUser = users.splice(userIndex, 1)[0];
 
   return res.status(200).json(deletedUser);
+});
+
+// Supabase / PostgreSQL routes (/api/v2/users/pg)
+// Password is excluded from SELECT.
+
+const PG_SELECT = "id, username, email, role, createdAt, updatedAt";
+
+router.get("/pg", async (req, res) => {
+  try {
+    const { data, error } = await supabase.from("users").select(PG_SELECT);
+
+    if (error) throw error;
+
+    return res.status(200).json({ success: true, data });
+  } catch (error) {
+    return res.status(400).json({ success: false, error: error.message });
+  }
+});
+
+router.post("/pg", async (req, res) => {
+  const { username, email, password, role } = req.body || {};
+
+  if (!username || !email || !password) {
+    return res.status(400).json({
+      success: false,
+      error: "username, email, and password are required",
+    });
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from("users")
+      .insert({ username, email, password, role: role || "user" })
+      .select(PG_SELECT)
+      .single();
+
+    if (error) throw error;
+
+    return res.status(201).json({ success: true, data });
+  } catch (error) {
+    return res.status(400).json({ success: false, error: error.message });
+  }
 });
